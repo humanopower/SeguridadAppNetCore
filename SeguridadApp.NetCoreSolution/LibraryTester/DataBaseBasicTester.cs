@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace LibraryTester
 {
 	[TestClass]
-	public class DataBaseBasicTester
+	class DataBaseBasicTester
 	{
 		[TestMethod]
 		public void DatabaseConnection()
