@@ -1,26 +1,21 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace EntityLibrary
 {
-    [DataContract]
-    public class RoleOperations
-    {
-        [DataMember]
-        public int RoleId { get; set; }
-        [DataMember]
-        public int OperationId { get; set; }
-        [DataMember]
-        public DateTime CreationDateTime { get; set; }
-        [DataMember]
-        public string CreationUserId { get; set; }
-        [DataMember]
-        public DateTime ModificationDateTime { get; set; }
-        [DataMember]
-        public string ModificationUserId { get; set; }
-        [DataMember]
-        public string DeclineDate { get; set; }
+	public class RoleOperations
+	{
+		public int RoleId { get; set; }
 
+		public int OperationId { get; set; }
 
-    }
+		public DateTime CreationDateTime { get; set; }
+
+		public string CreationUserId { get; set; }
+
+		public DateTime ModificationDateTime { get; set; }
+
+		public string ModificationUserId { get; set; }
+
+		public string DeclineDate { get; set; }
+	}
 }

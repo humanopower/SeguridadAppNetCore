@@ -1,36 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace EntityLibrary
 {
-    [DataContract]
-    public class Role
-    {
-                [DataMember]
-        public int RoleId { get; set; }
-                [DataMember]
-        public string RoleName { get; set; }
-                [DataMember]
-        public string RoleDescription { get; set; }
-                [DataMember]
-        public int ApplicationId { get; set; }
-                [DataMember]
-        public List<Operation> OperationsList { get; set; }
-                [DataMember]
-        public DateTime CreationDateTime { get; set; }
+	public class Role
+	{
+		public int RoleId { get; set; }
 
-                [DataMember]
-        public string CreationUserId { get; set; }
-                [DataMember]
-        public DateTime ModificationDateTime { get; set; }
-                [DataMember]
-        public string ModificationUserId { get; set; }
-                [DataMember]
-        public string DeclineDate { get; set; }
-                [DataMember]
-        public string RoleAuthorizationUserId { get; set; }
-                [DataMember]
-        public string RoleAuthorizationOwner { get; set; }
-    }
+		public string RoleName { get; set; }
+
+		public string RoleDescription { get; set; }
+
+		public int ApplicationId { get; set; }
+
+		public List<Operation> OperationsList { get; set; }
+
+		public DateTime CreationDateTime { get; set; }
+
+		public string CreationUserId { get; set; }
+
+		public DateTime ModificationDateTime { get; set; }
+
+		public string ModificationUserId { get; set; }
+
+		public string DeclineDate { get; set; }
+
+		public string RoleAuthorizationUserId { get; set; }
+
+		public string RoleAuthorizationOwner { get; set; }
+	}
 }

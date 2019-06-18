@@ -23,7 +23,7 @@ namespace SecurityLogicLibrary
 		{
 			_configuration = configuration;
 			_applicationName = _configuration.GetConnectionString("SecurityConnectionString");
-			_LDapConnectionString = _configuration.GetConnectionString("_LDapConnectionString");
+			_LDapConnectionString = _configuration.GetConnectionString("LDAPConnectionString");
 		}
 		#endregion
 		/// <summary>

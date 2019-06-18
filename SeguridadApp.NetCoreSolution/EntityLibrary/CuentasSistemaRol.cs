@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace EntityLibrary
 {
-    [DataContract]
-    public class CuentasSistemaRol
-    {
-        [DataMember]
-        public string UserId { get; set; }
-        [DataMember]
-        public string EmployeeNumber { get; set; }
-        [DataMember]
-        public string EmployeeNames { get; set; }
-        [DataMember]
-        public DateTime DeclineDateU { get; set; }
-        [DataMember]
-        public DateTime DeclineDateR { get; set; }
+	public class CuentasSistemaRol
+	{
+		public string UserId { get; set; }
 
-    }
+		public string EmployeeNumber { get; set; }
+
+		public string EmployeeNames { get; set; }
+
+		public DateTime DeclineDateU { get; set; }
+
+		public DateTime DeclineDateR { get; set; }
+	}
 }

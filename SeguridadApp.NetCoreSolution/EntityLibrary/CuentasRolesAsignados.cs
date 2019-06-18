@@ -1,19 +1,15 @@
-﻿using System.Runtime.Serialization;
-
-namespace EntityLibrary
+﻿namespace EntityLibrary
 {
-    [DataContract]
-    public class CuentasRolesAsignados
-    {
-        [DataMember]
-        public int ApplicationId { get; set; }
-        [DataMember]
-        public string Cuenta { get; set; }
-        [DataMember]
-        public string Ficha { get; set; }
-        [DataMember]
-        public string Nombres { get; set; }
-        [DataMember]
-        public string Rol { get; set; }
-    }
+	public class CuentasRolesAsignados
+	{
+		public int ApplicationId { get; set; }
+
+		public string Cuenta { get; set; }
+
+		public string Ficha { get; set; }
+
+		public string Nombres { get; set; }
+
+		public string Rol { get; set; }
+	}
 }

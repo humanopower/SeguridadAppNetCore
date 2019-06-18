@@ -1,42 +1,39 @@
 ﻿using System;
-using System.Runtime.Serialization;
+
 namespace EntityLibrary
 {
-    [DataContract]
-    public class User
-    {
-        [DataMember]
-        public string UserId { get; set; }
-        [DataMember]
-        public string EmployeeNumber { get; set; }
-        [DataMember]
-        public string EmployeeNames { get; set; }
-        [DataMember]
+	public class User
+	{
+		public string UserId { get; set; }
 
-        public string EmployeeLastName { get; set; }
-        [DataMember]
-        public string EmployeeEmail { get; set; }
-        [DataMember]
-        public string Telephone { get; set; }
-        [DataMember]
-        public string MobileTelephone { get; set; }
-        [DataMember]
-        public string ValidityStartDate { get; set; }
-        [DataMember]
-        public string DeclineDate { get; set; }
-        [DataMember]
-        public string DeclineDateSIO { get; set; }
-        [DataMember]
-        public string Observations { get; set; }
-        [DataMember]
-        public string RegisterDate { get; set; }
-        [DataMember]
-        public DateTime LastUpdate { get; set; }
-        [DataMember]
-        public Guid SessionId { get; set; }
-        [DataMember]
-        public AuthenticationTypeEnum AuthenticationType { get; set; }
-        [DataMember]
-        public string OrganismCode { get; set; }
-    }
+		public string EmployeeNumber { get; set; }
+
+		public string EmployeeNames { get; set; }
+
+		public string EmployeeLastName { get; set; }
+
+		public string EmployeeEmail { get; set; }
+
+		public string Telephone { get; set; }
+
+		public string MobileTelephone { get; set; }
+
+		public string ValidityStartDate { get; set; }
+
+		public string DeclineDate { get; set; }
+
+		public string DeclineDateSIO { get; set; }
+
+		public string Observations { get; set; }
+
+		public string RegisterDate { get; set; }
+
+		public DateTime LastUpdate { get; set; }
+
+		public Guid SessionId { get; set; }
+
+		public AuthenticationTypeEnum AuthenticationType { get; set; }
+
+		public string OrganismCode { get; set; }
+	}
 }
