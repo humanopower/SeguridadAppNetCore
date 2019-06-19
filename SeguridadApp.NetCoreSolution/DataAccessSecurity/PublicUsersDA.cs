@@ -1,19 +1,19 @@
-﻿using System;
-using DataAccessContracts;
+﻿using DataAccessContracts;
+using System;
 
 namespace DataAccessSecurity
 {
-    public class PublicUsersDA : IPublicUsersDA
+	public class PublicUsersDA : IPublicUsersDA
 
-{
-    public string GetLastEncryptedPassword(string login)
-    {
-        throw new NotImplementedException();
-    }
+	{
+		public string GetLastEncryptedPassword(string login)
+		{
+			throw new NotImplementedException();
+		}
 
-    public void Dispose()
-    {
-       GC.SuppressFinalize(this);
-    }
-}
+		public void Dispose()
+		{
+			GC.SuppressFinalize(this);
+		}
+	}
 }

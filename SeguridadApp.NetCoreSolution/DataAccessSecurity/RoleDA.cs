@@ -1,25 +1,28 @@
-﻿using System;
-using System.Data;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
-using DataAccessContracts;
+﻿using DataAccessContracts;
 using EntityLibrary;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace DataAccessSecurity
 {
-    public class RoleDA : IRoleDA
-    {
-        #region Atributos
-        private static DataTable _dtFixed = null;
-        private static DataRow _drFixed;
-		#endregion
+	public class RoleDA : IRoleDA
+	{
+		#region Atributos
+
+		private static DataTable _dtFixed = null;
+		private static DataRow _drFixed;
+
+		#endregion Atributos
+
 		#region Propiedades
+
 		private readonly IConfiguration _configuration;
 		private string StrConexion { get; set; }
 
-		#endregion
+		#endregion Propiedades
 
 		#region Constructor
 
@@ -29,638 +32,635 @@ namespace DataAccessSecurity
 			StrConexion = _configuration.GetConnectionString("SecurityConnectionString");
 		}
 
-		#endregion
+		#endregion Constructor
 
-		public void AddRole(Role role,User registerUser )
-        {
-            var conn = StrConexion;
-            
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_RolesInsert"
-                };
-                cmd.Parameters.AddWithValue("@RoleName", role.RoleName);
-                cmd.Parameters.AddWithValue("@RoleDescription", role.RoleDescription);
-                cmd.Parameters.AddWithValue("@ApplicationId", role.ApplicationId);        
-                cmd.Parameters.AddWithValue("@CreationUserId", registerUser.UserId);
-                cmd.Parameters.AddWithValue("@ModificationUserId", registerUser.UserId);
-                cmd.Parameters.AddWithValue("@DeclineDate", Convert.ToDateTime(string.Format("{0:yyyy/MM/dd}", Convert.ToDateTime(role.DeclineDate))));
-                cmd.Parameters.AddWithValue("@RoleAuthorizationUserId", role.RoleAuthorizationUserId);
-                cmd.Parameters.AddWithValue("@RoleAuthorizationOwner", role.RoleAuthorizationOwner);
+		public void AddRole(Role role, User registerUser)
+		{
+			var conn = StrConexion;
 
-                cmd.Parameters.Add("@RoleId", SqlDbType.Int).Direction = ParameterDirection.Output;
-                cmd.ExecuteNonQuery();
-                role.RoleId = (int)cmd.Parameters["@RoleId"].Value;
-            }
-        }
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_RolesInsert"
+				};
+				cmd.Parameters.AddWithValue("@RoleName", role.RoleName);
+				cmd.Parameters.AddWithValue("@RoleDescription", role.RoleDescription);
+				cmd.Parameters.AddWithValue("@ApplicationId", role.ApplicationId);
+				cmd.Parameters.AddWithValue("@CreationUserId", registerUser.UserId);
+				cmd.Parameters.AddWithValue("@ModificationUserId", registerUser.UserId);
+				cmd.Parameters.AddWithValue("@DeclineDate", Convert.ToDateTime(string.Format("{0:yyyy/MM/dd}", Convert.ToDateTime(role.DeclineDate))));
+				cmd.Parameters.AddWithValue("@RoleAuthorizationUserId", role.RoleAuthorizationUserId);
+				cmd.Parameters.AddWithValue("@RoleAuthorizationOwner", role.RoleAuthorizationOwner);
 
-        public  void UpdRole(Role role, User registerUser)
-        {
-            var conn = StrConexion;
+				cmd.Parameters.Add("@RoleId", SqlDbType.Int).Direction = ParameterDirection.Output;
+				cmd.ExecuteNonQuery();
+				role.RoleId = (int)cmd.Parameters["@RoleId"].Value;
+			}
+		}
 
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_RolesUpdate"
-                };
+		public void UpdRole(Role role, User registerUser)
+		{
+			var conn = StrConexion;
 
-                cmd.Parameters.AddWithValue("@RoleId", role.RoleId);
-                cmd.Parameters.AddWithValue("@RoleName", role.RoleName);
-                cmd.Parameters.AddWithValue("@RoleDescription", role.RoleDescription);
-                cmd.Parameters.AddWithValue("@ApplicationId", role.ApplicationId);
-                cmd.Parameters.AddWithValue("@ModificationUserId", registerUser.UserId);
-                cmd.Parameters.AddWithValue("@DeclineDate", Convert.ToDateTime(string.Format("{0:yyyy/MM/dd}", Convert.ToDateTime(role.DeclineDate))));
-                cmd.Parameters.AddWithValue("@RoleAuthorizationUserId", role.RoleAuthorizationUserId);
-                cmd.Parameters.AddWithValue("@RoleAuthorizationOwner", role.RoleAuthorizationOwner);
-                
-                cmd.ExecuteNonQuery();
-            }
-        }
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_RolesUpdate"
+				};
 
-        public  void DelRole(Role role, User registerUser)
-        {
-            var conn = StrConexion;
+				cmd.Parameters.AddWithValue("@RoleId", role.RoleId);
+				cmd.Parameters.AddWithValue("@RoleName", role.RoleName);
+				cmd.Parameters.AddWithValue("@RoleDescription", role.RoleDescription);
+				cmd.Parameters.AddWithValue("@ApplicationId", role.ApplicationId);
+				cmd.Parameters.AddWithValue("@ModificationUserId", registerUser.UserId);
+				cmd.Parameters.AddWithValue("@DeclineDate", Convert.ToDateTime(string.Format("{0:yyyy/MM/dd}", Convert.ToDateTime(role.DeclineDate))));
+				cmd.Parameters.AddWithValue("@RoleAuthorizationUserId", role.RoleAuthorizationUserId);
+				cmd.Parameters.AddWithValue("@RoleAuthorizationOwner", role.RoleAuthorizationOwner);
 
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_RolesDelete"
-                };
+				cmd.ExecuteNonQuery();
+			}
+		}
 
-                cmd.Parameters.AddWithValue("@RoleId", role.RoleId);
-                cmd.Parameters.AddWithValue("@ApplicationId", role.ApplicationId);
-                cmd.Parameters.AddWithValue("@DeclineDate", Convert.ToDateTime(string.Format("{0:yyyy/MM/dd}",  Convert.ToDateTime(role.DeclineDate))));
-                cmd.Parameters.AddWithValue("@ModificationUserId", registerUser.UserId);
-                cmd.ExecuteNonQuery();
-            }
-        }
+		public void DelRole(Role role, User registerUser)
+		{
+			var conn = StrConexion;
 
-        /// <summary>
-        /// Metodo que obtiene la lista de roles asignados a un usuario previamente registrado.
-        /// </summary>
-        /// <param name="application">Objeto Application</param>
-        /// <param name="user"> Objeto User</param>
-        /// <returns>Lista de roles</returns>
-        public  List<Role> GetRoleList(ApplicationPMX application, User user)
-        {
-            string conn = StrConexion;
-            var roleList = new List<Role>();
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_ApplicationRolesSelectByUserIdAndApplicationId"
-                };
-                cmd.Parameters.AddWithValue("@UserId", user.UserId);
-                cmd.Parameters.AddWithValue("@ApplicationId", application.ApplicationId);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    var role = new Role
-                     {
-                        RoleId = (int) reader["RoleId"]
-                        ,
-                        RoleName = (string)reader["RoleName"]
-                        ,
-                        RoleDescription = (string)reader["RoleDescription"]
-                        ,
-                        ApplicationId = (int)reader["ApplicationId"]
-                    };
-                    roleList.Add(role);
-                }
-            }
-            return roleList;
-        }
-        
-        public  Role GetRole(int roleId)
-        {
-            var conn = StrConexion;
-            var objRole = new Role();
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_FindRole"
-                };
-                cmd.Parameters.AddWithValue("@RoleId", roleId);
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_RolesDelete"
+				};
 
-                var reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    var role = new Role
-                    {
-                        RoleId = (int)reader["RoleId"],
-                        RoleName = (string)reader["RoleName"],
-                        RoleDescription = (string)reader["RoleDescription"],
-                        ApplicationId = (int)reader["ApplicationId"],
-                        DeclineDate = string.IsNullOrEmpty(reader["DeclineDate"].ToString()) ? string.Empty : string.Format("{0:dd/MM/yyyy}",reader["DeclineDate"]),
-                        RoleAuthorizationUserId = reader["RoleAuthorizationUserId"].ToString(),
-                        RoleAuthorizationOwner = reader["RoleAuthorizationOwner"].ToString()
-                    };
-                    objRole = role;
-                }
-            }
+				cmd.Parameters.AddWithValue("@RoleId", role.RoleId);
+				cmd.Parameters.AddWithValue("@ApplicationId", role.ApplicationId);
+				cmd.Parameters.AddWithValue("@DeclineDate", Convert.ToDateTime(string.Format("{0:yyyy/MM/dd}", Convert.ToDateTime(role.DeclineDate))));
+				cmd.Parameters.AddWithValue("@ModificationUserId", registerUser.UserId);
+				cmd.ExecuteNonQuery();
+			}
+		}
 
-            return objRole;
-        }
+		/// <summary>
+		/// Metodo que obtiene la lista de roles asignados a un usuario previamente registrado.
+		/// </summary>
+		/// <param name="application">Objeto Application</param>
+		/// <param name="user"> Objeto User</param>
+		/// <returns>Lista de roles</returns>
+		public List<Role> GetRoleList(ApplicationPMX application, User user)
+		{
+			string conn = StrConexion;
+			var roleList = new List<Role>();
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_ApplicationRolesSelectByUserIdAndApplicationId"
+				};
+				cmd.Parameters.AddWithValue("@UserId", user.UserId);
+				cmd.Parameters.AddWithValue("@ApplicationId", application.ApplicationId);
+				SqlDataReader reader = cmd.ExecuteReader();
+				while (reader.Read())
+				{
+					var role = new Role
+					{
+						RoleId = (int)reader["RoleId"]
+						 ,
+						RoleName = (string)reader["RoleName"]
+						 ,
+						RoleDescription = (string)reader["RoleDescription"]
+						 ,
+						ApplicationId = (int)reader["ApplicationId"]
+					};
+					roleList.Add(role);
+				}
+			}
+			return roleList;
+		}
 
-        public  List<Role> GetRoles(string strValue)
-        {
-            string conn = StrConexion;
-            var roleList = new List<Role>();
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_FindRoles"
-                };
-                cmd.Parameters.AddWithValue("@strCampo", strValue);
+		public Role GetRole(int roleId)
+		{
+			var conn = StrConexion;
+			var objRole = new Role();
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_FindRole"
+				};
+				cmd.Parameters.AddWithValue("@RoleId", roleId);
 
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    var role = new Role
-                    {
-                        RoleId = (int)reader["RoleId"],
-                        RoleName = (string)reader["RoleName"],
-                        RoleDescription = (string)reader["RoleDescription"],
-                        ApplicationId = (int)reader["ApplicationId"]
-                    };
-                    roleList.Add(role);
-                }
-            }
+				var reader = cmd.ExecuteReader();
+				while (reader.Read())
+				{
+					var role = new Role
+					{
+						RoleId = (int)reader["RoleId"],
+						RoleName = (string)reader["RoleName"],
+						RoleDescription = (string)reader["RoleDescription"],
+						ApplicationId = (int)reader["ApplicationId"],
+						DeclineDate = string.IsNullOrEmpty(reader["DeclineDate"].ToString()) ? string.Empty : string.Format("{0:dd/MM/yyyy}", reader["DeclineDate"]),
+						RoleAuthorizationUserId = reader["RoleAuthorizationUserId"].ToString(),
+						RoleAuthorizationOwner = reader["RoleAuthorizationOwner"].ToString()
+					};
+					objRole = role;
+				}
+			}
 
-            return roleList;
-        }
+			return objRole;
+		}
 
-        public  DataTable GetRolesApplications(string strValue)
-        {
-            CreateColumns();
+		public List<Role> GetRoles(string strValue)
+		{
+			string conn = StrConexion;
+			var roleList = new List<Role>();
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_FindRoles"
+				};
+				cmd.Parameters.AddWithValue("@strCampo", strValue);
 
-            var conn = StrConexion;
-            var roleList = new List<Role>();
-           
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_FindRoles"
-                };
-                cmd.Parameters.AddWithValue("@strCampo", strValue);
+				SqlDataReader reader = cmd.ExecuteReader();
+				while (reader.Read())
+				{
+					var role = new Role
+					{
+						RoleId = (int)reader["RoleId"],
+						RoleName = (string)reader["RoleName"],
+						RoleDescription = (string)reader["RoleDescription"],
+						ApplicationId = (int)reader["ApplicationId"]
+					};
+					roleList.Add(role);
+				}
+			}
 
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    var role = new Role
-                    {
-                        RoleId = (int)reader["RoleId"],
-                        RoleName = (string)reader["RoleName"],
-                        RoleDescription = (string)reader["RoleDescription"],
-                        ApplicationId = (int)reader["ApplicationId"],
-                        DeclineDate = string.IsNullOrEmpty(reader["DeclineDate"].ToString()) ? string.Empty : string.Format("{0:dd/MM/yyyy}", reader["DeclineDate"])
-                    };
-                    roleList.Add(role);
-                }
+			return roleList;
+		}
 
-                ApplicationDA applicationDa = new ApplicationDA(_configuration);
-                //llenamos Tabla
-                if (roleList.Count > 0)
-                {
-                    foreach (var role in roleList)
-                    {
-                        _drFixed = _dtFixed.NewRow();
+		public DataTable GetRolesApplications(string strValue)
+		{
+			CreateColumns();
 
-                        _drFixed["RoleId"] = role.RoleId;
-                        _drFixed["RoleName"] = role.RoleName;
-                        _drFixed["RoleDescription"] = role.RoleDescription;
-                        _drFixed["ApplicationId"] = role.ApplicationId;
+			var conn = StrConexion;
+			var roleList = new List<Role>();
 
-                        _drFixed["ApplicationName"] = applicationDa.FindApplication(role.ApplicationId).ApplicationName;
-                        _drFixed["DeclineDate"] = role.DeclineDate;
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_FindRoles"
+				};
+				cmd.Parameters.AddWithValue("@strCampo", strValue);
 
-                        _dtFixed.Rows.Add(_drFixed);
-                    }
-                }
-                applicationDa.Dispose();
-            }
+				SqlDataReader reader = cmd.ExecuteReader();
+				while (reader.Read())
+				{
+					var role = new Role
+					{
+						RoleId = (int)reader["RoleId"],
+						RoleName = (string)reader["RoleName"],
+						RoleDescription = (string)reader["RoleDescription"],
+						ApplicationId = (int)reader["ApplicationId"],
+						DeclineDate = string.IsNullOrEmpty(reader["DeclineDate"].ToString()) ? string.Empty : string.Format("{0:dd/MM/yyyy}", reader["DeclineDate"])
+					};
+					roleList.Add(role);
+				}
 
-            return _dtFixed;
-        }
+				ApplicationDA applicationDa = new ApplicationDA(_configuration);
+				//llenamos Tabla
+				if (roleList.Count > 0)
+				{
+					foreach (var role in roleList)
+					{
+						_drFixed = _dtFixed.NewRow();
 
-        public  List<Role> GetAllroles()
-        {
-            var conn = StrConexion;
-            var lstRole = new List<Role>();
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_GetAllRoles"
-                };
-                
-                var reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    var role = new Role
-                    {
-                        RoleId = (int)reader["RoleId"],
-                        RoleName = (string)reader["RoleName"],
-                        RoleDescription = (string)reader["RoleDescription"],
-                        ApplicationId = (int)reader["ApplicationId"]
-                    };
-                    lstRole.Add(role);
-                }
-            }
+						_drFixed["RoleId"] = role.RoleId;
+						_drFixed["RoleName"] = role.RoleName;
+						_drFixed["RoleDescription"] = role.RoleDescription;
+						_drFixed["ApplicationId"] = role.ApplicationId;
 
-            return lstRole;
-        }
+						_drFixed["ApplicationName"] = applicationDa.FindApplication(role.ApplicationId).ApplicationName;
+						_drFixed["DeclineDate"] = role.DeclineDate;
 
-        /// <summary>
-        /// Obtiene lista de roles por aplicacion
-        /// </summary>
-        /// <param name="userApplicationRole">Objeto tipo Aplicacion</param>
-        /// /// <param name="iTipo">Tipo de Aplicacion</param>
-        /// <returns>Lista de roles</returns>
-        public  List<Role> GetRoleforApplication(UsersApplicationsRoles userApplicationRole, int iTipo)
-        {
+						_dtFixed.Rows.Add(_drFixed);
+					}
+				}
+				applicationDa.Dispose();
+			}
 
-            var conn = StrConexion;
-            var rolelst = new List<Role>();
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_FindRolesforApplication"
-                };
-                cmd.Parameters.AddWithValue("@IdApplication", userApplicationRole.ApplicationId);
-                cmd.Parameters.AddWithValue("@UserId", userApplicationRole.UserId);
-                cmd.Parameters.AddWithValue("@Tipo", iTipo);
+			return _dtFixed;
+		}
 
-                var reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    var objRole = new Role
-                                      {
-                        RoleId = (int)reader["RoleId"],
-                        RoleName = (string)reader["RoleName"],
-                        RoleDescription = string.IsNullOrEmpty(reader["RoleDescription"].ToString()) ? string.Empty : reader["RoleDescription"].ToString(),
-                        ApplicationId = (int)reader["ApplicationId"],
-                        CreationDateTime = (DateTime)reader["CreationDateTime"],
-                        CreationUserId = string.IsNullOrEmpty(reader["CreationUserId"].ToString()) ? string.Empty : reader["CreationUserId"].ToString(),
-                        ModificationDateTime = (DateTime)reader["ModificationDateTime"],
-                        ModificationUserId = string.IsNullOrEmpty(reader["ModificationUserId"].ToString()) ? string.Empty : reader["ModificationUserId"].ToString(),
-                        DeclineDate = string.IsNullOrEmpty(reader["DeclineDate"].ToString()) ? string.Empty : string.Format("{0:dd/MM/yyy}", reader["DeclineDate"]),
-                        RoleAuthorizationUserId = (string)reader["RoleAuthorizationUserId"],
-                        RoleAuthorizationOwner = (string)reader["RoleAuthorizationOwner"]
-                    };
-                    rolelst.Add(objRole);
-                }
-            }
+		public List<Role> GetAllroles()
+		{
+			var conn = StrConexion;
+			var lstRole = new List<Role>();
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_GetAllRoles"
+				};
 
-            return rolelst;
-        }
+				var reader = cmd.ExecuteReader();
+				while (reader.Read())
+				{
+					var role = new Role
+					{
+						RoleId = (int)reader["RoleId"],
+						RoleName = (string)reader["RoleName"],
+						RoleDescription = (string)reader["RoleDescription"],
+						ApplicationId = (int)reader["ApplicationId"]
+					};
+					lstRole.Add(role);
+				}
+			}
 
-        public  void UpdateRoleOperations(ApplicationPMX application, Role role, List<Operation> operations)
-        {
-        }
+			return lstRole;
+		}
 
-        public  DataTable GetRoleApplications(UsersApplicationsRoles userApplicationRole, int tipo)
-        {
-            CreateColumns();
+		/// <summary>
+		/// Obtiene lista de roles por aplicacion
+		/// </summary>
+		/// <param name="userApplicationRole">Objeto tipo Aplicacion</param>
+		/// /// <param name="iTipo">Tipo de Aplicacion</param>
+		/// <returns>Lista de roles</returns>
+		public List<Role> GetRoleforApplication(UsersApplicationsRoles userApplicationRole, int iTipo)
+		{
+			var conn = StrConexion;
+			var rolelst = new List<Role>();
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_FindRolesforApplication"
+				};
+				cmd.Parameters.AddWithValue("@IdApplication", userApplicationRole.ApplicationId);
+				cmd.Parameters.AddWithValue("@UserId", userApplicationRole.UserId);
+				cmd.Parameters.AddWithValue("@Tipo", iTipo);
 
-            var lstRole = GetRoleforApplication(userApplicationRole, tipo);
-            ApplicationDA applicationDa = new ApplicationDA(_configuration);
-            if (lstRole.Count>0)
-            {
-                foreach (var role in lstRole)
-                {
-                    _drFixed = _dtFixed.NewRow();
-                    
-                    _drFixed["RoleId"] = role.RoleId;
-                    _drFixed["RoleName"] = role.RoleName;
-                    _drFixed["RoleDescription"] = role.RoleDescription;
-                    _drFixed["ApplicationId"] = role.ApplicationId;
-                    _drFixed["ApplicationName"] = applicationDa.FindApplication(role.ApplicationId).ApplicationName; 
-                    _drFixed["CreationDateTime"] = role.CreationDateTime;
-                    _drFixed["CreationUserId"] = role.CreationUserId;
-                    _drFixed["ModificationDateTime"] = role.ModificationDateTime;
-                    _drFixed["ModificationUserId"] = role.ModificationUserId;
-                    _drFixed["DeclineDate"] = role.DeclineDate;
-                    _drFixed["RoleAuthorizationUserId"] = role.RoleAuthorizationUserId;
-                    _drFixed["RoleAuthorizationOwner"] = role.RoleAuthorizationOwner;
+				var reader = cmd.ExecuteReader();
+				while (reader.Read())
+				{
+					var objRole = new Role
+					{
+						RoleId = (int)reader["RoleId"],
+						RoleName = (string)reader["RoleName"],
+						RoleDescription = string.IsNullOrEmpty(reader["RoleDescription"].ToString()) ? string.Empty : reader["RoleDescription"].ToString(),
+						ApplicationId = (int)reader["ApplicationId"],
+						CreationDateTime = (DateTime)reader["CreationDateTime"],
+						CreationUserId = string.IsNullOrEmpty(reader["CreationUserId"].ToString()) ? string.Empty : reader["CreationUserId"].ToString(),
+						ModificationDateTime = (DateTime)reader["ModificationDateTime"],
+						ModificationUserId = string.IsNullOrEmpty(reader["ModificationUserId"].ToString()) ? string.Empty : reader["ModificationUserId"].ToString(),
+						DeclineDate = string.IsNullOrEmpty(reader["DeclineDate"].ToString()) ? string.Empty : string.Format("{0:dd/MM/yyy}", reader["DeclineDate"]),
+						RoleAuthorizationUserId = (string)reader["RoleAuthorizationUserId"],
+						RoleAuthorizationOwner = (string)reader["RoleAuthorizationOwner"]
+					};
+					rolelst.Add(objRole);
+				}
+			}
 
-                    _dtFixed.Rows.Add(_drFixed);
-                }
-            }
-            applicationDa.Dispose();
+			return rolelst;
+		}
 
-            return _dtFixed;
+		public void UpdateRoleOperations(ApplicationPMX application, Role role, List<Operation> operations)
+		{
+		}
 
-        }
+		public DataTable GetRoleApplications(UsersApplicationsRoles userApplicationRole, int tipo)
+		{
+			CreateColumns();
 
-        public void CreateColumns()
-        {
-            _dtFixed = new DataTable();
+			var lstRole = GetRoleforApplication(userApplicationRole, tipo);
+			ApplicationDA applicationDa = new ApplicationDA(_configuration);
+			if (lstRole.Count > 0)
+			{
+				foreach (var role in lstRole)
+				{
+					_drFixed = _dtFixed.NewRow();
 
-            try
-            {
-                var column = new DataColumn
-                                 {
-                                     DataType = Type.GetType("System.Int32"),
-                                     ColumnName = "RoleId",
-                                     ReadOnly = false
-                                 };
-                _dtFixed.Columns.Add(column);
+					_drFixed["RoleId"] = role.RoleId;
+					_drFixed["RoleName"] = role.RoleName;
+					_drFixed["RoleDescription"] = role.RoleDescription;
+					_drFixed["ApplicationId"] = role.ApplicationId;
+					_drFixed["ApplicationName"] = applicationDa.FindApplication(role.ApplicationId).ApplicationName;
+					_drFixed["CreationDateTime"] = role.CreationDateTime;
+					_drFixed["CreationUserId"] = role.CreationUserId;
+					_drFixed["ModificationDateTime"] = role.ModificationDateTime;
+					_drFixed["ModificationUserId"] = role.ModificationUserId;
+					_drFixed["DeclineDate"] = role.DeclineDate;
+					_drFixed["RoleAuthorizationUserId"] = role.RoleAuthorizationUserId;
+					_drFixed["RoleAuthorizationOwner"] = role.RoleAuthorizationOwner;
 
-                column = new DataColumn
-                             {
-                                 DataType = Type.GetType("System.String"),
-                                 ColumnName = "RoleName",
-                                 ReadOnly = false
-                             };
-                _dtFixed.Columns.Add(column);
+					_dtFixed.Rows.Add(_drFixed);
+				}
+			}
+			applicationDa.Dispose();
 
-                column = new DataColumn
-                             {
-                                 DataType = Type.GetType("System.String"),
-                                 ColumnName = "RoleDescription",
-                                 ReadOnly = false
-                             };
-                _dtFixed.Columns.Add(column);
+			return _dtFixed;
+		}
 
-                column = new DataColumn
-                             {
-                                 DataType = Type.GetType("System.Int32"),
-                                 ColumnName = "ApplicationId",
-                                 ReadOnly = false
-                             };
-                _dtFixed.Columns.Add(column);
+		public void CreateColumns()
+		{
+			_dtFixed = new DataTable();
 
-                column = new DataColumn
-                             {
-                                 DataType = Type.GetType("System.String"),
-                                 ColumnName = "ApplicationName",
-                                 ReadOnly = false
-                             };
-                _dtFixed.Columns.Add(column);
+			try
+			{
+				var column = new DataColumn
+				{
+					DataType = Type.GetType("System.Int32"),
+					ColumnName = "RoleId",
+					ReadOnly = false
+				};
+				_dtFixed.Columns.Add(column);
 
-                column = new DataColumn
-                             {
-                                 DataType = Type.GetType("System.DateTime"),
-                                 ColumnName = "CreationDateTime",
-                                 ReadOnly = false
-                             };
-                _dtFixed.Columns.Add(column);
+				column = new DataColumn
+				{
+					DataType = Type.GetType("System.String"),
+					ColumnName = "RoleName",
+					ReadOnly = false
+				};
+				_dtFixed.Columns.Add(column);
 
-                column = new DataColumn
-                             {
-                                 DataType = Type.GetType("System.String"),
-                                 ColumnName = "CreationUserId",
-                                 ReadOnly = false
-                             };
-                _dtFixed.Columns.Add(column);
+				column = new DataColumn
+				{
+					DataType = Type.GetType("System.String"),
+					ColumnName = "RoleDescription",
+					ReadOnly = false
+				};
+				_dtFixed.Columns.Add(column);
 
-                column = new DataColumn
-                             {
-                                 DataType = Type.GetType("System.DateTime"),
-                                 ColumnName = "ModificationDateTime",
-                                 ReadOnly = false
-                             };
-                _dtFixed.Columns.Add(column);
+				column = new DataColumn
+				{
+					DataType = Type.GetType("System.Int32"),
+					ColumnName = "ApplicationId",
+					ReadOnly = false
+				};
+				_dtFixed.Columns.Add(column);
 
-                column = new DataColumn
-                             {
-                                 DataType = Type.GetType("System.String"),
-                                 ColumnName = "ModificationUserId",
-                                 ReadOnly = false
-                             };
-                _dtFixed.Columns.Add(column);
+				column = new DataColumn
+				{
+					DataType = Type.GetType("System.String"),
+					ColumnName = "ApplicationName",
+					ReadOnly = false
+				};
+				_dtFixed.Columns.Add(column);
 
-                column = new DataColumn
-                             {
-                                 DataType = Type.GetType("System.String"),
-                                 ColumnName = "DeclineDate",
-                                 ReadOnly = false
-                             };
-                _dtFixed.Columns.Add(column);
+				column = new DataColumn
+				{
+					DataType = Type.GetType("System.DateTime"),
+					ColumnName = "CreationDateTime",
+					ReadOnly = false
+				};
+				_dtFixed.Columns.Add(column);
 
-                column = new DataColumn
-                             {
-                                 DataType = Type.GetType("System.String"),
-                                 ColumnName = "RoleAuthorizationUserId",
-                                 ReadOnly = false
-                             };
-                _dtFixed.Columns.Add(column);
+				column = new DataColumn
+				{
+					DataType = Type.GetType("System.String"),
+					ColumnName = "CreationUserId",
+					ReadOnly = false
+				};
+				_dtFixed.Columns.Add(column);
 
-                column = new DataColumn
-                             {
-                                 DataType = Type.GetType("System.String"),
-                                 ColumnName = "RoleAuthorizationOwner",
-                                 ReadOnly = false
-                             };
-                _dtFixed.Columns.Add(column);
-            }
-            catch (Exception ex)
-            { throw new Exception(ex.Message); }
-        }
-        
-        public  List<Role> GetRoleList(ApplicationPMX application)
-        {
-            var conn = StrConexion;
-            var roleList = new List<Role>();
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_ApplicationRolesSelectByApplicationId"
-                };
-               
-                cmd.Parameters.AddWithValue("@ApplicationId", application.ApplicationId);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    var role = new Role
-                    {
-                        RoleId = (int)reader["RoleId"]
-                       ,
-                        RoleName = (string)reader["RoleName"]
-                       ,
-                        RoleDescription = (string)reader["RoleDescription"]
-                       ,
-                        ApplicationId = (int)reader["ApplicationId"]
-                    };
-                    roleList.Add(role);
-                }
-            }
-            return roleList;
-        }
+				column = new DataColumn
+				{
+					DataType = Type.GetType("System.DateTime"),
+					ColumnName = "ModificationDateTime",
+					ReadOnly = false
+				};
+				_dtFixed.Columns.Add(column);
 
-        public  void InsertRoleNotAllowedCombination(ApplicationPMX application, Role roleA, Role roleB, User registerUser)
-        {
-            var conn = StrConexion;
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_RolesCombinationNotAllowedInsert"
-                };
-                cmd.Parameters.AddWithValue("@ApplicationId", application.ApplicationId);
-                cmd.Parameters.AddWithValue("@RoleIdA", roleA.RoleId);
-                cmd.Parameters.AddWithValue("@RoleIdB", roleB.RoleId);
-                cmd.Parameters.AddWithValue("@UserId", registerUser.UserId);
-                cmd.ExecuteNonQuery();
-            }
-        }
+				column = new DataColumn
+				{
+					DataType = Type.GetType("System.String"),
+					ColumnName = "ModificationUserId",
+					ReadOnly = false
+				};
+				_dtFixed.Columns.Add(column);
 
-        public  void DeleteRoleNotAllowedCombination(ApplicationPMX application, Role roleA, Role roleB)
-        {
-            var conn = StrConexion;
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_RolesCombinationNotAllowedDelete"
-                };
-                cmd.Parameters.AddWithValue("@ApplicationId", application.ApplicationId);
-                cmd.Parameters.AddWithValue("@RoleIdA", roleA.RoleId);
-                cmd.Parameters.AddWithValue("@RoleIdB", roleB.RoleId);
-                cmd.ExecuteNonQuery();
-            }
-        }
+				column = new DataColumn
+				{
+					DataType = Type.GetType("System.String"),
+					ColumnName = "DeclineDate",
+					ReadOnly = false
+				};
+				_dtFixed.Columns.Add(column);
 
-        public  bool RoleNotAllowedCombinationExist(ApplicationPMX application, Role roleA, Role roleB)
-        {
-            var conn = StrConexion;
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_RolesCombinationNotAllowedSelectByApplicationIdAndRoles"
-                };
-                cmd.Parameters.AddWithValue("@ApplicationId", application.ApplicationId);
-                cmd.Parameters.AddWithValue("@RoleIdA", roleA.RoleId);
-                cmd.Parameters.AddWithValue("@RoleIdB", roleB.RoleId);
-                var reader = cmd.ExecuteReader();
-                if (reader.Read())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        public  bool RoleNotAllowedCombinationExistAndDate(ApplicationPMX application, Role roleA, Role roleB)
-        {
-            var conn = StrConexion;
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_RolesCombinationNotAllowedSelectByApplicationIdAndRolesAndDate"
-                };
-                cmd.Parameters.AddWithValue("@ApplicationId", application.ApplicationId);
-                cmd.Parameters.AddWithValue("@RoleIdA", roleA.RoleId);
-                cmd.Parameters.AddWithValue("@RoleIdB", roleB.RoleId);
-                var reader = cmd.ExecuteReader();
-                if (reader.Read())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+				column = new DataColumn
+				{
+					DataType = Type.GetType("System.String"),
+					ColumnName = "RoleAuthorizationUserId",
+					ReadOnly = false
+				};
+				_dtFixed.Columns.Add(column);
 
-        public  DataTable GetRoleCombinationsNotAllowed(ApplicationPMX application)
-        {
-            var conn = StrConexion;
-            DataTable dt = new DataTable();
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_RolesCombinationNotAllowedSelectByApplicationId"
-                };
-                cmd.Parameters.AddWithValue("@ApplicationId", application.ApplicationId);
-                SqlDataReader dr = cmd.ExecuteReader();
-                dt.Load(dr);
+				column = new DataColumn
+				{
+					DataType = Type.GetType("System.String"),
+					ColumnName = "RoleAuthorizationOwner",
+					ReadOnly = false
+				};
+				_dtFixed.Columns.Add(column);
+			}
+			catch (Exception ex)
+			{ throw new Exception(ex.Message); }
+		}
 
-            }
-            return dt;
-        }
+		public List<Role> GetRoleList(ApplicationPMX application)
+		{
+			var conn = StrConexion;
+			var roleList = new List<Role>();
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_ApplicationRolesSelectByApplicationId"
+				};
 
+				cmd.Parameters.AddWithValue("@ApplicationId", application.ApplicationId);
+				SqlDataReader reader = cmd.ExecuteReader();
+				while (reader.Read())
+				{
+					var role = new Role
+					{
+						RoleId = (int)reader["RoleId"]
+						,
+						RoleName = (string)reader["RoleName"]
+						,
+						RoleDescription = (string)reader["RoleDescription"]
+						,
+						ApplicationId = (int)reader["ApplicationId"]
+					};
+					roleList.Add(role);
+				}
+			}
+			return roleList;
+		}
 
-        public void UpdateRoleNotAllowedCombination(ApplicationPMX application, Role roleA, Role roleB, DateTime dtDeclineDate, User registerUser)
-        {
-            var conn = StrConexion;
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_RolesCombinationNotAllowedUpdate"
-                };
-                cmd.Parameters.AddWithValue("@ApplicationID", application.ApplicationId);
-                cmd.Parameters.AddWithValue("@RoleIdA", roleA.RoleId);
-                cmd.Parameters.AddWithValue("@RoleIdB", roleB.RoleId);
-                cmd.Parameters.AddWithValue("@UserId", registerUser.UserId);
-                cmd.Parameters.AddWithValue("@DeclineDate", dtDeclineDate);
-                cmd.ExecuteNonQuery();
-            }
-        }
+		public void InsertRoleNotAllowedCombination(ApplicationPMX application, Role roleA, Role roleB, User registerUser)
+		{
+			var conn = StrConexion;
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_RolesCombinationNotAllowedInsert"
+				};
+				cmd.Parameters.AddWithValue("@ApplicationId", application.ApplicationId);
+				cmd.Parameters.AddWithValue("@RoleIdA", roleA.RoleId);
+				cmd.Parameters.AddWithValue("@RoleIdB", roleB.RoleId);
+				cmd.Parameters.AddWithValue("@UserId", registerUser.UserId);
+				cmd.ExecuteNonQuery();
+			}
+		}
 
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-        }
-    }
+		public void DeleteRoleNotAllowedCombination(ApplicationPMX application, Role roleA, Role roleB)
+		{
+			var conn = StrConexion;
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_RolesCombinationNotAllowedDelete"
+				};
+				cmd.Parameters.AddWithValue("@ApplicationId", application.ApplicationId);
+				cmd.Parameters.AddWithValue("@RoleIdA", roleA.RoleId);
+				cmd.Parameters.AddWithValue("@RoleIdB", roleB.RoleId);
+				cmd.ExecuteNonQuery();
+			}
+		}
+
+		public bool RoleNotAllowedCombinationExist(ApplicationPMX application, Role roleA, Role roleB)
+		{
+			var conn = StrConexion;
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_RolesCombinationNotAllowedSelectByApplicationIdAndRoles"
+				};
+				cmd.Parameters.AddWithValue("@ApplicationId", application.ApplicationId);
+				cmd.Parameters.AddWithValue("@RoleIdA", roleA.RoleId);
+				cmd.Parameters.AddWithValue("@RoleIdB", roleB.RoleId);
+				var reader = cmd.ExecuteReader();
+				if (reader.Read())
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public bool RoleNotAllowedCombinationExistAndDate(ApplicationPMX application, Role roleA, Role roleB)
+		{
+			var conn = StrConexion;
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_RolesCombinationNotAllowedSelectByApplicationIdAndRolesAndDate"
+				};
+				cmd.Parameters.AddWithValue("@ApplicationId", application.ApplicationId);
+				cmd.Parameters.AddWithValue("@RoleIdA", roleA.RoleId);
+				cmd.Parameters.AddWithValue("@RoleIdB", roleB.RoleId);
+				var reader = cmd.ExecuteReader();
+				if (reader.Read())
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public DataTable GetRoleCombinationsNotAllowed(ApplicationPMX application)
+		{
+			var conn = StrConexion;
+			DataTable dt = new DataTable();
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_RolesCombinationNotAllowedSelectByApplicationId"
+				};
+				cmd.Parameters.AddWithValue("@ApplicationId", application.ApplicationId);
+				SqlDataReader dr = cmd.ExecuteReader();
+				dt.Load(dr);
+			}
+			return dt;
+		}
+
+		public void UpdateRoleNotAllowedCombination(ApplicationPMX application, Role roleA, Role roleB, DateTime dtDeclineDate, User registerUser)
+		{
+			var conn = StrConexion;
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_RolesCombinationNotAllowedUpdate"
+				};
+				cmd.Parameters.AddWithValue("@ApplicationID", application.ApplicationId);
+				cmd.Parameters.AddWithValue("@RoleIdA", roleA.RoleId);
+				cmd.Parameters.AddWithValue("@RoleIdB", roleB.RoleId);
+				cmd.Parameters.AddWithValue("@UserId", registerUser.UserId);
+				cmd.Parameters.AddWithValue("@DeclineDate", dtDeclineDate);
+				cmd.ExecuteNonQuery();
+			}
+		}
+
+		public void Dispose()
+		{
+			GC.SuppressFinalize(this);
+		}
+	}
 }

@@ -2,8 +2,8 @@
 
 namespace DataAccessContracts
 {
-    public interface IPublicUsersDA : IDisposable
-    {
-        string GetLastEncryptedPassword(string login);
-    }
+	public interface IPublicUsersDA : IDisposable
+	{
+		string GetLastEncryptedPassword(string login);
+	}
 }

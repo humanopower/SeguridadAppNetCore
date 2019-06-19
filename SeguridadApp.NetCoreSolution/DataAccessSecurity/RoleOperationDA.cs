@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using DataAccessContracts;
+﻿using DataAccessContracts;
 using EntityLibrary;
-using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace DataAccessSecurity
 {
-    public class RoleOperationDA : IRoleOperationDA
-    {
+	public class RoleOperationDA : IRoleOperationDA
+	{
 		#region Propiedades
+
 		private readonly IConfiguration _configuration;
 		private string StrConexion { get; set; }
 
-		#endregion
+		#endregion Propiedades
 
 		#region Constructor
 
@@ -25,124 +25,123 @@ namespace DataAccessSecurity
 			StrConexion = _configuration.GetConnectionString("SecurityConnectionString");
 		}
 
-		#endregion
+		#endregion Constructor
 
 		public int AddNewRoleOperation(RoleOperations roleOperations, User registerUser)
-        {
-            var conn = StrConexion;
-            var iResultado = 0;
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                              {
-                                  Connection = sqlCon,
-                                  CommandType = CommandType.StoredProcedure,
-                                  CommandText = "usp_RoleOperationsInsert"
-                              };
+		{
+			var conn = StrConexion;
+			var iResultado = 0;
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_RoleOperationsInsert"
+				};
 
-                cmd.Parameters.Add("@RoleId", SqlDbType.Int).Value = roleOperations.RoleId;
-                cmd.Parameters.Add("@OperationId", SqlDbType.Int).Value = roleOperations.OperationId;
-                cmd.Parameters.Add("@CreationUserId", SqlDbType.NVarChar).Value = registerUser.UserId;
-                cmd.Parameters.Add("@DeclineDate", SqlDbType.DateTime).Value = Convert.ToDateTime(roleOperations.DeclineDate);
+				cmd.Parameters.Add("@RoleId", SqlDbType.Int).Value = roleOperations.RoleId;
+				cmd.Parameters.Add("@OperationId", SqlDbType.Int).Value = roleOperations.OperationId;
+				cmd.Parameters.Add("@CreationUserId", SqlDbType.NVarChar).Value = registerUser.UserId;
+				cmd.Parameters.Add("@DeclineDate", SqlDbType.DateTime).Value = Convert.ToDateTime(roleOperations.DeclineDate);
 
-                iResultado=cmd.ExecuteNonQuery();
-            }
+				iResultado = cmd.ExecuteNonQuery();
+			}
 
-            return iResultado;
-        }
+			return iResultado;
+		}
 
-        public  int DelRoleOperation(RoleOperations roleOperations, User registerUser)
-        {
-            var conn = StrConexion;
-            var iResultado = 0;
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_RoleOperationsDelete"
-                };
+		public int DelRoleOperation(RoleOperations roleOperations, User registerUser)
+		{
+			var conn = StrConexion;
+			var iResultado = 0;
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_RoleOperationsDelete"
+				};
 
-                cmd.Parameters.Add("@RoleId", SqlDbType.Int).Value = roleOperations.RoleId;
-                cmd.Parameters.Add("@OperationId", SqlDbType.Int).Value = roleOperations.OperationId;
-                cmd.Parameters.Add("@ModificationUserId", SqlDbType.NVarChar).Value = registerUser.UserId;
-                cmd.Parameters.Add("@DeclineDate", SqlDbType.DateTime).Value =  Convert.ToDateTime(string.Format("{0:yyyy/MM/dd}", Convert.ToDateTime(roleOperations.DeclineDate)));
+				cmd.Parameters.Add("@RoleId", SqlDbType.Int).Value = roleOperations.RoleId;
+				cmd.Parameters.Add("@OperationId", SqlDbType.Int).Value = roleOperations.OperationId;
+				cmd.Parameters.Add("@ModificationUserId", SqlDbType.NVarChar).Value = registerUser.UserId;
+				cmd.Parameters.Add("@DeclineDate", SqlDbType.DateTime).Value = Convert.ToDateTime(string.Format("{0:yyyy/MM/dd}", Convert.ToDateTime(roleOperations.DeclineDate)));
 
-                iResultado = cmd.ExecuteNonQuery();
-            }
+				iResultado = cmd.ExecuteNonQuery();
+			}
 
-            return iResultado;
-        }
-        
-        public  List<Operation> GetoperationRole(Role role)
-        {
-            var conn = StrConexion;
-            var operationList = new List<Operation>();
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_GetoperationRole"
-                };
-                cmd.Parameters.AddWithValue("@RoleId", role.RoleId);
+			return iResultado;
+		}
 
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    var operation = new Operation()
-                    {
-                        OperationId = (int)reader["OperationId"],
-                        OperationName = (string)reader["OperationName"],
-                        OperationDescription = (string)reader["OperationDescription"]
-                    };
+		public List<Operation> GetoperationRole(Role role)
+		{
+			var conn = StrConexion;
+			var operationList = new List<Operation>();
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_GetoperationRole"
+				};
+				cmd.Parameters.AddWithValue("@RoleId", role.RoleId);
 
-                    operationList.Add(operation);
-                }
-            }
-            return operationList;
-        }
+				SqlDataReader reader = cmd.ExecuteReader();
+				while (reader.Read())
+				{
+					var operation = new Operation()
+					{
+						OperationId = (int)reader["OperationId"],
+						OperationName = (string)reader["OperationName"],
+						OperationDescription = (string)reader["OperationDescription"]
+					};
 
-        public  List<RoleOperations> GetRoleOperations(Role role)
-        {
-            var conn = StrConexion;
-            var roleOperationList = new List<RoleOperations>();
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_GetoperationRole"
-                };
-                cmd.Parameters.AddWithValue("@RoleId", role.RoleId);
+					operationList.Add(operation);
+				}
+			}
+			return operationList;
+		}
 
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    var roleOperations = new RoleOperations()
-                    {
-                        RoleId = (int)reader["RoleId"],
-                        OperationId = (int)reader["OperationId"]
-                    };
+		public List<RoleOperations> GetRoleOperations(Role role)
+		{
+			var conn = StrConexion;
+			var roleOperationList = new List<RoleOperations>();
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_GetoperationRole"
+				};
+				cmd.Parameters.AddWithValue("@RoleId", role.RoleId);
 
-                    roleOperationList.Add(roleOperations);
-                }
-            }
+				SqlDataReader reader = cmd.ExecuteReader();
+				while (reader.Read())
+				{
+					var roleOperations = new RoleOperations()
+					{
+						RoleId = (int)reader["RoleId"],
+						OperationId = (int)reader["OperationId"]
+					};
 
-            return roleOperationList;
-        }
+					roleOperationList.Add(roleOperations);
+				}
+			}
 
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-        }
-    }
+			return roleOperationList;
+		}
+
+		public void Dispose()
+		{
+			GC.SuppressFinalize(this);
+		}
+	}
 }
-

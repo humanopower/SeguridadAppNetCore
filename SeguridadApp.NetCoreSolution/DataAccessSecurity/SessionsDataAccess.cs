@@ -1,21 +1,20 @@
-﻿using System;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-using DataAccessContracts;
+﻿using DataAccessContracts;
 using EntityLibrary;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace DataAccessSecurity
 {
-    public class SessionsDataAccess : ISessionsDataAccess
-    {
-
+	public class SessionsDataAccess : ISessionsDataAccess
+	{
 		#region Propiedades
+
 		private readonly IConfiguration _configuration;
 		private string StrConexion { get; set; }
 
-		#endregion
+		#endregion Propiedades
 
 		#region Constructor
 
@@ -25,116 +24,116 @@ namespace DataAccessSecurity
 			StrConexion = _configuration.GetConnectionString("SecurityConnectionString");
 		}
 
-		#endregion
+		#endregion Constructor
+
 		public User AddSession(User user, ApplicationPMX application)
-        {
-            var conn = StrConexion;
-            
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_LoggingSessionsInsert"
-                };
+		{
+			var conn = StrConexion;
 
-                cmd.Parameters.Add("@UserId", SqlDbType.NVarChar).Value = user.UserId;
-                cmd.Parameters.Add("@ApplicationId", SqlDbType.NVarChar).Value = application.ApplicationId;
-                //cmd.Parameters.Add("@CreationUserId", System.Data.SqlDbType.NVarChar).Value = registerUser.UserId;
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_LoggingSessionsInsert"
+				};
 
-                using (IDataReader reader = cmd.ExecuteReader())
-                {
-                    if(reader.Read())
-                    {
-                        user.SessionId = (Guid)reader["SessionID"];
-                    }
-                }
-            }
+				cmd.Parameters.Add("@UserId", SqlDbType.NVarChar).Value = user.UserId;
+				cmd.Parameters.Add("@ApplicationId", SqlDbType.NVarChar).Value = application.ApplicationId;
+				//cmd.Parameters.Add("@CreationUserId", System.Data.SqlDbType.NVarChar).Value = registerUser.UserId;
 
-            return user;
-        }
+				using (IDataReader reader = cmd.ExecuteReader())
+				{
+					if (reader.Read())
+					{
+						user.SessionId = (Guid)reader["SessionID"];
+					}
+				}
+			}
 
-        public  void FindSession(User user, ApplicationPMX application, out bool sessionFinded, out bool isSessionValid)
-        {
-            sessionFinded = false;
-            isSessionValid = false;
-            var conn = StrConexion;
+			return user;
+		}
 
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_LoggingSessionsSelect"
-                };
+		public void FindSession(User user, ApplicationPMX application, out bool sessionFinded, out bool isSessionValid)
+		{
+			sessionFinded = false;
+			isSessionValid = false;
+			var conn = StrConexion;
 
-                cmd.Parameters.Add("@SessionId", SqlDbType.UniqueIdentifier).Value = user.SessionId;
-                cmd.Parameters.Add("@ApplicationId", SqlDbType.Int).Value = application.ApplicationId;
-              
-                using (IDataReader reader = cmd.ExecuteReader())
-                {
-                    if (!reader.Read()) return;
-                    sessionFinded = true;
-                    isSessionValid = (bool) reader["IsSessionValid"];
-                }
-            }
-        }
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_LoggingSessionsSelect"
+				};
 
-        public  void UpdateSessionEndTime(User user, ApplicationPMX application)
-        {
-           var conn = StrConexion;
+				cmd.Parameters.Add("@SessionId", SqlDbType.UniqueIdentifier).Value = user.SessionId;
+				cmd.Parameters.Add("@ApplicationId", SqlDbType.Int).Value = application.ApplicationId;
 
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_LoggingSessionsUpdate"
-                };
+				using (IDataReader reader = cmd.ExecuteReader())
+				{
+					if (!reader.Read()) return;
+					sessionFinded = true;
+					isSessionValid = (bool)reader["IsSessionValid"];
+				}
+			}
+		}
 
-                cmd.Parameters.Add("@SessionId", SqlDbType.UniqueIdentifier).Value = user.SessionId;
-                cmd.Parameters.Add("@ApplicationId", SqlDbType.Int).Value = application.ApplicationId;
-                cmd.ExecuteNonQuery();
-            }
-        }
+		public void UpdateSessionEndTime(User user, ApplicationPMX application)
+		{
+			var conn = StrConexion;
 
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_LoggingSessionsUpdate"
+				};
 
-        public  string FindSessionUser(string sessionGuid)
-        {
-            var conn = StrConexion;
-            string userId = null;
-            using (var sqlCon = new SqlConnection(conn))
-            {
-                sqlCon.Open();
-                var cmd = new SqlCommand
-                {
-                    Connection = sqlCon,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "usp_LoggingSessionsSelectBySession"
-                };
+				cmd.Parameters.Add("@SessionId", SqlDbType.UniqueIdentifier).Value = user.SessionId;
+				cmd.Parameters.Add("@ApplicationId", SqlDbType.Int).Value = application.ApplicationId;
+				cmd.ExecuteNonQuery();
+			}
+		}
 
-                cmd.Parameters.Add("@SessionId", SqlDbType.UniqueIdentifier).Value = new Guid(sessionGuid);
+		public string FindSessionUser(string sessionGuid)
+		{
+			var conn = StrConexion;
+			string userId = null;
+			using (var sqlCon = new SqlConnection(conn))
+			{
+				sqlCon.Open();
+				var cmd = new SqlCommand
+				{
+					Connection = sqlCon,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "usp_LoggingSessionsSelectBySession"
+				};
 
-                using (IDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        userId = reader["UserId"].ToString();
-                    }
-                }
-            }
-            return userId;
-        }
+				cmd.Parameters.Add("@SessionId", SqlDbType.UniqueIdentifier).Value = new Guid(sessionGuid);
 
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-        }
-    }
+				using (IDataReader reader = cmd.ExecuteReader())
+				{
+					if (reader.Read())
+					{
+						userId = reader["UserId"].ToString();
+					}
+				}
+			}
+			return userId;
+		}
+
+		public void Dispose()
+		{
+			GC.SuppressFinalize(this);
+		}
+	}
 }

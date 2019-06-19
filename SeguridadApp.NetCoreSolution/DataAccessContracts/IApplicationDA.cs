@@ -1,44 +1,45 @@
-﻿using System;
+﻿using EntityLibrary;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using EntityLibrary;
 
 namespace DataAccessContracts
 {
-    public interface IApplicationDA : IDisposable
-    {
-        void AddApplication(ApplicationPMX application, User registerUser);
+	public interface IApplicationDA : IDisposable
+	{
+		void AddApplication(ApplicationPMX application, User registerUser);
 
-        void DelApplication(ApplicationPMX application, User registerUser);
-        void UpdApplication(ApplicationPMX application, User registerUser);
+		void DelApplication(ApplicationPMX application, User registerUser);
 
-        List<ApplicationPMX> GetApplicationList();
+		void UpdApplication(ApplicationPMX application, User registerUser);
 
-        List<ApplicationPMX> GetApplicationList(string strValue);
+		List<ApplicationPMX> GetApplicationList();
 
-        DataSet SearchApplication(string strValue, ApplicationPMX application, User loggedUser);
+		List<ApplicationPMX> GetApplicationList(string strValue);
 
-        /// <summary>
-        /// Metodo que obtiene las aplicaciones por Usuario
-        /// </summary>
-        /// <param name="strUser">Id del Usuario</param>
-        /// <returns>Regresa un objeto de tipo DataSet</returns>
-        DataSet FindApplicationforUser(string strUser);
+		DataSet SearchApplication(string strValue, ApplicationPMX application, User loggedUser);
 
-        ApplicationPMX FindApplication(int idApplication);
+		/// <summary>
+		/// Metodo que obtiene las aplicaciones por Usuario
+		/// </summary>
+		/// <param name="strUser">Id del Usuario</param>
+		/// <returns>Regresa un objeto de tipo DataSet</returns>
+		DataSet FindApplicationforUser(string strUser);
 
-        Response AddApplicationAdministration(ApplicationPMX application, User user,
-            bool canAdminAppRolesAndOperations, bool canAdminUsers, string userId);
+		ApplicationPMX FindApplication(int idApplication);
 
-        Response UpdApplicationAdministration(ApplicationPMX application,
-            bool canAdminAppRolesAndOperations, bool canAdminUsers, string strUser);
+		Response AddApplicationAdministration(ApplicationPMX application, User user,
+			 bool canAdminAppRolesAndOperations, bool canAdminUsers, string userId);
 
-        Response DelApplicationAdministration(ApplicationPMX application, User user);
+		Response UpdApplicationAdministration(ApplicationPMX application,
+			 bool canAdminAppRolesAndOperations, bool canAdminUsers, string strUser);
 
-        object[] GetApplicationAdministration(ApplicationPMX application);
+		Response DelApplicationAdministration(ApplicationPMX application, User user);
 
-        DataSet SearchCuentasRolesData(int idAplicacion);
+		object[] GetApplicationAdministration(ApplicationPMX application);
 
-        DataSet SearchCuentasSistemaRol(int rolId);
-    }
+		DataSet SearchCuentasRolesData(int idAplicacion);
+
+		DataSet SearchCuentasSistemaRol(int rolId);
+	}
 }
