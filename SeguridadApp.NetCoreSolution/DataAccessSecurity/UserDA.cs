@@ -7,6 +7,7 @@ using EntityLibrary;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace DataAccessSecurity
 {
@@ -21,13 +22,15 @@ namespace DataAccessSecurity
 
         #region Propiedades
         private string StrConexion { get; set; }
-        #endregion
+		  private readonly IConfiguration _configuration;
+		#endregion
 
-        #region Constructor
-        public UserDA()
+		#region Constructor
+		public UserDA(IConfiguration configuration)
         {
-            StrConexion = StrConexion;
-        }
+			_configuration = configuration;
+			StrConexion = _configuration.GetConnectionString("SecurityConnectionString");
+		}
         #endregion
 
         #region Metodos Publicos

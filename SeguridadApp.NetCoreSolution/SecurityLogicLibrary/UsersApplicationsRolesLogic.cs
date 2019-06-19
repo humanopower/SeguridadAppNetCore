@@ -277,7 +277,7 @@ namespace SecurityLogicLibrary
             var lstAppUserRol = usersApplicationsRoleDa.GetApplicationUsersList(appFinded);
             usersApplicationsRoleDa.Dispose();
             var userWithDataList = new List<User>();
-            var userDA = new UserDA();
+            var userDA = new UserDA(_configuration);
             foreach (var user in lstAppUserRol)
             {
                 try

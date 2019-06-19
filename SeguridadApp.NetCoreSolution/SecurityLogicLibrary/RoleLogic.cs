@@ -28,7 +28,7 @@ namespace SecurityLogicLibrary
 		public Response AddNewRole(Role role, User registerUser, int tipo)
         {
             var response = new Response { Message = "Sin inicializar", Result = false };
-            var userDa = new UserDA();
+            var userDa = new UserDA(_configuration);
             var roleDa = new RoleDA(_configuration);
             try
             {

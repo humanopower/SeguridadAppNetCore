@@ -97,7 +97,7 @@ namespace SecurityLogicLibrary
                }
               #endregion
 
-                var userDa = new UserDA();
+                var userDa = new UserDA(_configuration);
                 userDa.AddUser(user, registerUser);
               userDa.Dispose();
 
@@ -183,7 +183,7 @@ namespace SecurityLogicLibrary
                     return response;
                 }
                 #endregion
-                var userDa = new UserDA();
+                var userDa = new UserDA(_configuration);
                 userDa.DelUser(user, registerUser);
                 userDa.Dispose();
                 #region logRegister
@@ -303,7 +303,7 @@ namespace SecurityLogicLibrary
                 }
                 #endregion
 
-                UserDA userDa = new UserDA();
+                UserDA userDa = new UserDA(_configuration);
                 userDa.UpdUser(user, registerUser);
                 userDa.Dispose();
                 #region logRegister
@@ -367,7 +367,7 @@ namespace SecurityLogicLibrary
             
             try
             {
-                var userDa = new UserDA();
+                var userDa = new UserDA(_configuration);
                 existingUser = userDa.FindUser(userId);
                 userDa.Dispose();
             }
@@ -386,7 +386,7 @@ namespace SecurityLogicLibrary
         /// <returns>Regresa un objeto lista de los usuarios</returns>
         public List<User> SearchUser(string strValue,User registerUser)
         {
-            var daUser = new UserDA();
+            var daUser = new UserDA(_configuration);
             var ds = new DataSet();
             var lstUser = new List<User>();
 
@@ -415,7 +415,7 @@ namespace SecurityLogicLibrary
 
         public List<User> SearchUserScope(string strValue, User registerUser)
         {
-            var daUser = new UserDA();
+            var daUser = new UserDA(_configuration);
             var ds = new DataSet();
             var lstUser = new List<User>();
 
@@ -443,7 +443,7 @@ namespace SecurityLogicLibrary
 
         public  List<User> GetUserId(string strValue)
         {
-            var userDa = new UserDA();
+            var userDa = new UserDA(_configuration);
             var listUser = userDa.GetUser(strValue);
             userDa.Dispose();
             return listUser;
@@ -451,7 +451,7 @@ namespace SecurityLogicLibrary
 
         public string GetNameUserAccount(string numeroEmpleado)
         {
-            UserDA userDa = new UserDA();
+            UserDA userDa = new UserDA(_configuration);
             string nombreCompleto = userDa.GetNameUserAccount(numeroEmpleado);
             userDa.Dispose();
             return nombreCompleto;
