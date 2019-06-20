@@ -6,7 +6,8 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM microsoft/dotnet:2.2-sdk-nanoserver-1803 AS build
+#FROM microsoft/dotnet:2.2-sdk-nanoserver-1803 AS build
+FROM microsoft/dotnet:2.0-sdk
 WORKDIR /src
 COPY ["SeguridadAppAPI/SeguridadAppAPI.csproj", "SeguridadAppAPI/"]
 RUN dotnet restore "SeguridadAppAPI/SeguridadAppAPI.csproj"
