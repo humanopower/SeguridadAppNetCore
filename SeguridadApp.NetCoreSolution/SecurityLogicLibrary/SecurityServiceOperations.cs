@@ -7,11 +7,12 @@ using System.Security.Policy;
 using System.Text;
 using EntityLibrary;
 using Microsoft.Extensions.Configuration;
+using SecurityServicesContracts;
 
 namespace SecurityLogicLibrary
 {
-    public class SecurityServiceOperations : IDisposable
-    {
+    public class SecurityServiceOperations : ISecurityServiceContract,IDisposable
+	{
 
 		#region Atributes
 		private IConfiguration _configuration;

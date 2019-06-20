@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SecurityLogicLibrary;
+using SecurityServicesContracts;
 
 namespace SeguridadAppAPI
 {
@@ -27,6 +29,7 @@ namespace SeguridadAppAPI
 		{
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 			services.AddSingleton<IConfiguration>(Configuration);
+			services.AddSingleton<ISecurityServiceContract, SecurityServiceOperations>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

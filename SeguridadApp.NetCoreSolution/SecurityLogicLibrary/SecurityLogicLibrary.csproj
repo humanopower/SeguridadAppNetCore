@@ -13,6 +13,7 @@
     <ProjectReference Include="..\DataAccessSecurity\DataAccessSecurity.csproj" />
     <ProjectReference Include="..\EntityLibrary\EntityLibrary.csproj" />
     <ProjectReference Include="..\SecurityLogicLibraryContracts\SecurityLogicLibraryContracts.csproj" />
+    <ProjectReference Include="..\SecurityServicesContracts\SecurityServicesContracts.csproj" />
   </ItemGroup>
 
 </Project>

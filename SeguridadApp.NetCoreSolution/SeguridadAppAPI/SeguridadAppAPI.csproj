@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EntityLibrary\EntityLibrary.csproj" />
     <ProjectReference Include="..\SecurityLogicLibrary\SecurityLogicLibrary.csproj" />
+    <ProjectReference Include="..\SecurityServicesContracts\SecurityServicesContracts.csproj" />
   </ItemGroup>
 
 </Project>

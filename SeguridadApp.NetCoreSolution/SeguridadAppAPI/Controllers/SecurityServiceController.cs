@@ -1,9 +1,8 @@
 ﻿using EntityLibrary;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SecurityLogicLibrary;
+using SecurityServicesContracts;
 using System;
 using System.Collections.Generic;
 
@@ -13,11 +12,11 @@ namespace SeguridadAppAPI.Controllers
 	[ApiController]
 	public class SecurityServiceController : ControllerBase
 	{
-		private readonly IConfiguration _config;
 
-		public SecurityServiceController(IConfiguration configuration)
+		private readonly ISecurityServiceContract _securityService;
+		public SecurityServiceController(ISecurityServiceContract securityService)
 		{
-			_config = configuration;
+			_securityService = securityService;
 		}
 
 
@@ -48,8 +47,9 @@ namespace SeguridadAppAPI.Controllers
 				var userId = data["userId"].ToString();
 				var password = data["password"].ToString();
 				var applicationName = data["applicationName"].ToString();
-				var securityServiceOperation = new SecurityServiceOperations(_config);
-				resp = securityServiceOperation.Authenticate(domain, userId, password, applicationName, out userAuthenticated);
+				
+				resp = _securityService.Authenticate(domain, userId, password, applicationName, out userAuthenticated);
+				
 				var returnObject = new { Response = resp, User = userAuthenticated };
 				return Ok(returnObject);
 			}
@@ -73,8 +73,7 @@ namespace SeguridadAppAPI.Controllers
 				var domain = data["domain"].ToString();
 				var userId = data["userId"].ToString();
 				var password = data["password"].ToString();
-				var securityServiceOperation = new SecurityServiceOperations(_config);
-				resp = securityServiceOperation.AuthenticateADOnly(domain, userId, password, out userAuthenticated);
+				resp = _securityService.AuthenticateADOnly(domain, userId, password, out userAuthenticated);
 				var returnObject = new { Response = resp, User = userAuthenticated };
 				return Ok(returnObject);
 			}
@@ -99,10 +98,8 @@ namespace SeguridadAppAPI.Controllers
 				var applicationName = data["applicationName"].ToString();
 				var applicationPassword = data["applicationPassword"].ToString();
 				var operation = data["operation"].ToString();
-				using (var securityServiceOperation = new SecurityServiceOperations(_config))
-				{
-					resp = securityServiceOperation.Authorize(userAuthenticated, applicationName, applicationPassword, operation);
-				}
+				resp = _securityService.Authorize(userAuthenticated, applicationName, applicationPassword, operation);
+				
 				var returnObject = new { Response = resp };
 				return Ok(returnObject);
 			}
@@ -127,10 +124,9 @@ namespace SeguridadAppAPI.Controllers
 				var applicationName = data["applicationName"].ToString();
 				var applicationPassword = data["applicationPassword"].ToString();
 				var userId = data["userId"].ToString();
-				using (var securityServiceOperation = new SecurityServiceOperations(_config))
-				{
-					resp = securityServiceOperation.GetUserInformationAndRoles(applicationName, applicationPassword, userId, out user, out roleList);
-				}
+				
+				resp = _securityService.GetUserInformationAndRoles(applicationName, applicationPassword, userId, out user, out roleList);
+				
 				var returnObject = new { Response = resp, User = user, roleUserList = roleList };
 				return Ok(returnObject);
 			}
@@ -156,10 +152,8 @@ namespace SeguridadAppAPI.Controllers
 				var applicationName = data["applicationName"].ToString();
 				var applicationPassword = data["applicationPassword"].ToString();
 				var userId = data["userId"].ToString();
-				using (var securityServiceOperation = new SecurityServiceOperations(_config))
-				{
-					resp = securityServiceOperation.GetUserInformationAndOperations(userAuthenticated, applicationName, applicationPassword, out operationList);
-				}
+				resp = _securityService.GetUserInformationAndOperations(userAuthenticated, applicationName, applicationPassword, out operationList);
+				
 				var returnObject = new { Response = resp, operationUserList = operationList };
 				return Ok(returnObject);
 			}
@@ -184,10 +178,7 @@ namespace SeguridadAppAPI.Controllers
 				var applicationName = data["applicationName"].ToString();
 				var applicationPassword = data["applicationPassword"].ToString();
 				var roleName = data["roleName"].ToString();
-				using (var securityServiceOperation = new SecurityServiceOperations(_config))
-				{
-					resp = securityServiceOperation.GetUserListByRole(applicationName, applicationPassword, roleName, out userListFindedByRole);
-				}
+					resp = _securityService.GetUserListByRole(applicationName, applicationPassword, roleName, out userListFindedByRole);
 				var returnObject = new { Response = resp, userList = userListFindedByRole };
 				return Ok(returnObject);
 			}
@@ -211,10 +202,9 @@ namespace SeguridadAppAPI.Controllers
 			{
 				var applicationName = data["applicationName"].ToString();
 				var applicationPassword = data["applicationPassword"].ToString();
-				using (var securityServiceOperation = new SecurityServiceOperations(_config))
-				{
-					resp = securityServiceOperation.GetUserListByApplication(applicationName, applicationPassword, out userListFindedByApplication);
-				}
+				
+					resp = _securityService.GetUserListByApplication(applicationName, applicationPassword, out userListFindedByApplication);
+				
 				var returnObject = new { Response = resp, userList = userListFindedByApplication };
 				return Ok(returnObject);
 			}
